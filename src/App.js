@@ -12,18 +12,85 @@ import ChangePassword from './components/ChangePassword/ChangePassword'
 import Snake from './components/GameBoard/Snake'
 import Food from './components/GameBoard/Food'
 
+// random food spawn
+const randomFoodCoordinates = () => {
+  const max = 98
+  const min = 1
+  const x = Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2
+  const y = Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2
+  return [x, y]
+}
+
+// set state for initial game state
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
       user: null,
       msgAlerts: [],
-      food: [6, 8],
+      snakeSpeed: 400,
+      food: randomFoodCoordinates(),
+      moveDirection: 'right',
       snakePieces: [
         [0, 0],
         [2, 0]
       ]
     }
+  }
+
+  componentDidMount () {
+    // give a speed to snake
+    setInterval(this.snakeMovement, this.state.snakeSpeed)
+    document.onKeyDown = this.onKeyDown
+  }
+
+  // add key stroke designations to recognise arrow keys as movement directions
+  onKeyDown = (e) => {
+    e = e || window.event
+    // switch allows us to select a code block to be used based on key down event function
+    switch (e.keyCode) {
+      case 37: this.setState({ moveDirection: 'left' })
+        break
+      case 38:
+        this.setState({ moveDirection: 'up' })
+        break
+      case 39:
+        this.setState({ moveDirection: 'right' })
+        break
+      case 40:
+        this.setState({ moveDirection: 'down' })
+        break
+    }
+  }
+
+  // set snake movement by setting state of pieces of the snake, front of the snake to be the head
+  snakeMovement = () => {
+    const pieces = [...this.state.snakePieces]
+    let snakeHead = pieces[pieces.length - 1]
+
+    switch (this.state.moveDirection) {
+      case 'right':
+        snakeHead = [snakeHead[0] + 2, snakeHead[1]]
+        break
+      case 'left':
+        snakeHead = [snakeHead[0] - 2, snakeHead[1]]
+        break
+      case 'down':
+        snakeHead = [snakeHead[0], snakeHead[1] + 2]
+        break
+      case 'up':
+        snakeHead = [snakeHead[0], snakeHead[1] - 2]
+        break
+    }
+
+    // push to get a new head of the snake and shift to remove the tail
+    // together should emulate snake movement
+    // set state of snake pieces after each movement
+    pieces.push(snakeHead)
+    pieces.shift()
+    this.setState({
+      snakePieces: pieces
+    })
   }
 
   setUser = user => this.setState({ user })
@@ -45,7 +112,6 @@ class App extends Component {
 
   render () {
     const { msgAlerts, user } = this.state
-    console.log(this.state.snakePieces)
     return (
       <Fragment>
         <Header user={user} />
@@ -63,7 +129,7 @@ class App extends Component {
           <div className="main-title">Snake 2.0</div>
           <div className="game-box">
             <Snake snakePieces={this.state.snakePieces}/>
-            <Food dot={this.state.food}/>
+            <Food piece={this.state.food}/>
           </div>
           <Route path='/sign-up' render={() => (
             <SignUp msgAlert={this.msgAlert} setUser={this.setUser} />
