@@ -9,13 +9,20 @@ import SignUp from './components/SignUp/SignUp'
 import SignIn from './components/SignIn/SignIn'
 import SignOut from './components/SignOut/SignOut'
 import ChangePassword from './components/ChangePassword/ChangePassword'
+import Snake from './components/GameBoard/Snake'
+import Food from './components/GameBoard/Food'
 
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
       user: null,
-      msgAlerts: []
+      msgAlerts: [],
+      food: [6, 8],
+      snakePieces: [
+        [0, 0],
+        [2, 0]
+      ]
     }
   }
 
@@ -38,7 +45,7 @@ class App extends Component {
 
   render () {
     const { msgAlerts, user } = this.state
-
+    console.log(this.state.snakePieces)
     return (
       <Fragment>
         <Header user={user} />
@@ -53,6 +60,11 @@ class App extends Component {
           />
         ))}
         <main className="container">
+          <div className="main-title">Snake 2.0</div>
+          <div className="game-box">
+            <Snake snakePieces={this.state.snakePieces}/>
+            <Food dot={this.state.food}/>
+          </div>
           <Route path='/sign-up' render={() => (
             <SignUp msgAlert={this.msgAlert} setUser={this.setUser} />
           )} />

@@ -1,6 +1,6 @@
 {
-  "name": "snake-2.0-client",
-  "homepage": "https://jtshepherd31.github.io/Snake-2.0-Client",
+  "name": "snake-2-client",
+  "homepage": "https://jtshepherd31.github.io/snake-2-Client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
