@@ -28,9 +28,10 @@ class App extends Component {
     this.state = {
       user: null,
       msgAlerts: [],
-      snakeSpeed: 400,
+      snakeSpeed: 200,
       food: randomFoodCoordinates(),
       moveDirection: 'right',
+      gameStarted: false,
       snakePieces: [
         [0, 0],
         [2, 0]
@@ -40,57 +41,139 @@ class App extends Component {
 
   componentDidMount () {
     // give a speed to snake
+    // document.onKeyDown = (e) => this.onKeyDown(e)
+    window.addEventListener('keydown', (e) => {
+      e.preventDefault()
+      this.onKeyDown(e)
+    })
     setInterval(this.snakeMovement, this.state.snakeSpeed)
-    document.onKeyDown = this.onKeyDown
+  }
+
+  componentDidUpdate () {
+    this.borderGameOver()
+    this.checkForFood()
+    this.tangleGameOver()
   }
 
   // add key stroke designations to recognise arrow keys as movement directions
   onKeyDown = (e) => {
-    e = e || window.event
     // switch allows us to select a code block to be used based on key down event function
-    switch (e.keyCode) {
-      case 37: this.setState({ moveDirection: 'left' })
-        break
-      case 38:
-        this.setState({ moveDirection: 'up' })
-        break
-      case 39:
-        this.setState({ moveDirection: 'right' })
-        break
-      case 40:
-        this.setState({ moveDirection: 'down' })
-        break
+    if (e.keyCode === 37 && this.state.moveDirection !== 'right') {
+      this.setState({ moveDirection: 'left' })
+    } else if (e.keyCode === 38 && this.state.moveDirection !== 'down') {
+      this.setState({ moveDirection: 'up' })
+    } else if (e.keyCode === 39 && this.state.moveDirection !== 'left') {
+      this.setState({ moveDirection: 'right' })
+    } else if (e.keyCode === 40 && this.state.moveDirection !== 'up') {
+      this.setState({ moveDirection: 'down' })
+    } else if (e.keyCode === 32 && !this.state.gameStarted) {
+      this.setState({
+        gameStarted: true
+      })
     }
   }
 
   // set snake movement by setting state of pieces of the snake, front of the snake to be the head
   snakeMovement = () => {
-    const pieces = [...this.state.snakePieces]
-    let snakeHead = pieces[pieces.length - 1]
+    if (this.state.gameStarted) {
+      const pieces = [...this.state.snakePieces]
+      let snakeHead = pieces[pieces.length - 1]
 
-    switch (this.state.moveDirection) {
-      case 'right':
+      if (this.state.moveDirection === 'right') {
         snakeHead = [snakeHead[0] + 2, snakeHead[1]]
-        break
-      case 'left':
+      } else if (this.state.moveDirection === 'left') {
         snakeHead = [snakeHead[0] - 2, snakeHead[1]]
-        break
-      case 'down':
+      } else if (this.state.moveDirection === 'down') {
         snakeHead = [snakeHead[0], snakeHead[1] + 2]
-        break
-      case 'up':
+      } else if (this.state.moveDirection === 'up') {
         snakeHead = [snakeHead[0], snakeHead[1] - 2]
-        break
-    }
+      }
 
-    // push to get a new head of the snake and shift to remove the tail
-    // together should emulate snake movement
-    // set state of snake pieces after each movement
-    pieces.push(snakeHead)
-    pieces.shift()
-    this.setState({
-      snakePieces: pieces
+      // push to get a new head of the snake and shift to remove the tail
+      // together should emulate snake movement
+      // set state of snake pieces after each movement
+      pieces.push(snakeHead)
+      pieces.shift()
+      this.setState({
+        snakePieces: pieces
+      })
+    }
+  }
+
+  borderGameOver () {
+    const snakeHead = this.state.snakePieces[this.state.snakePieces.length - 1]
+    if (snakeHead[0] >= 100 || snakeHead[1] >= 100 || snakeHead[0] < 0 || snakeHead[1] < 0) {
+      this.setState({
+        user: null,
+        msgAlerts: [],
+        snakeSpeed: 200,
+        food: randomFoodCoordinates(),
+        moveDirection: 'right',
+        gameStarted: false,
+        snakePieces: [
+          [0, 0],
+          [2, 0]
+        ]
+      })
+      return ('Game over')
+    }
+  }
+
+  checkForFood () {
+    const snakeHead = this.state.snakePieces[this.state.snakePieces.length - 1]
+    const { food } = this.state
+    if (snakeHead[0] === food[0] && snakeHead[1] === food[1]) {
+      this.growSnake()
+    }
+  }
+
+  tangleGameOver () {
+    const pieces = [...this.state.snakePieces]
+    const snakeHead = this.state.snakePieces[this.state.snakePieces.length - 1]
+
+    pieces.pop()
+    pieces.forEach(piece => {
+      if (piece[0] === snakeHead[0] && piece[1] === snakeHead[1]) {
+        this.setState({
+          user: null,
+          msgAlerts: [],
+          snakeSpeed: 200,
+          food: randomFoodCoordinates(),
+          moveDirection: 'right',
+          gameStarted: false,
+          snakePieces: [
+            [0, 0],
+            [2, 0]
+          ]
+        })
+        return ('Game over')
+      }
     })
+    // if (snakeHead[0] === pieces[0] || snakeHead[1] === pieces[1]) {
+    //   this.setState({
+    //     user: null,
+    //     msgAlerts: [],
+    //     snakeSpeed: 200,
+    //     food: randomFoodCoordinates(),
+    //     moveDirection: 'right',
+    //     gameStarted: false,
+    //     snakePieces: [
+    //       [0, 0],
+    //       [2, 0]
+    //     ]
+    //   })
+    //   return ('Game over')
+    // }
+  }
+
+  growSnake () {
+    const fedSnake = [...this.state.snakePieces]
+    fedSnake.unshift([])
+    this.setState({
+      snakePieces: fedSnake,
+      food: randomFoodCoordinates()
+    })
+    // The unshift() method adds one or more elements to the beginning of an array and returns the new length of the array.
   }
 
   setUser = user => this.setState({ user })
@@ -127,10 +210,14 @@ class App extends Component {
         ))}
         <main className="container">
           <div className="main-title">Snake 2.0</div>
-          <div className="game-box">
-            <Snake snakePieces={this.state.snakePieces}/>
-            <Food piece={this.state.food}/>
-          </div>
+          <section className="row">
+            <div className="scores-box"></div>
+            <div className="game-box">
+              <Snake snakePieces={this.state.snakePieces}/>
+              <Food piece={this.state.food}/>
+            </div>
+            <div className="account-box"></div>
+          </section>
           <Route path='/sign-up' render={() => (
             <SignUp msgAlert={this.msgAlert} setUser={this.setUser} />
           )} />
