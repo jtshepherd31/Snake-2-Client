@@ -1,30 +1,32 @@
 @import '~bootstrap/scss/bootstrap';
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 
 .game-box {
   position: relative;
   margin: auto;
-  width: 40%;
-  height: 600px;
-  border: 3px solid black;
+  width: 550px;
+  height: 500px;
+  border: 10px solid #2A8E02;
   background-color: #c7f9cc;
 }
 
-.scores-box {
+.current-score-box {
   position: relative;
   margin: auto;
   width: 20%;
-  height: 600px;
-  border: 3px solid black;
-  background-color: #c7f9cc;
+  height: 500px;
+  border: 3px solid white;
+  background-color: white;
 }
 
-.account-box {
+.high-score-box {
   position: relative;
   margin: auto;
   width: 20%;
-  height: 600px;
-  border: 3px solid black;
-  background-color: #c7f9cc;
+  height: 500px;
+  border: 3px solid white;
+  background-color: white;
 }
 
 .row {
@@ -36,6 +38,7 @@
   text-align: center;
   margin: 30px;
   font-size: 30px;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .snake-piece {
@@ -60,8 +63,22 @@
   max-width: none;
 }
 
+html, body {
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(221,221,221,1) 0%, rgba(2,164,0,1) 67%, rgba(0,88,2,1) 100%) !important;
+}
 
+.bg-primary {
+  background-color: darkgreen !important;
+}
 
+.currentScore {
+  font-size: 25px;
+  font-family: 'Press Start 2P', cursive;
+}
+
+hr {
+  
+}
 // tree color 99621E
 // grass color c7f9cc
 // snake colors 03071E, D00000, FAA307
