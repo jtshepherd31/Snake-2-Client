@@ -8,9 +8,9 @@ Server Repo -
 https://github.com/jtshepherd31/Snake-2-api
 
 GitHub Deployed Site -
-https://blobject-oriented-progammers.github.io/blob-squad-client/
+None yet
 Heroku Deployed Site -
-https://dry-sea-75589.herokuapp.com/
+None yet
 
 List of technologies used -
 
