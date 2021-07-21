@@ -6,6 +6,7 @@ import HighScore from './../../components/Scores/HighScore'
 import Snake from './Snake'
 import Food from './Food'
 import { saveHighScore } from '../../api/score'
+// import messages from '../AutoDismissAlert/messages'
 
 const randomFoodCoordinates = () => {
   const max = 98
@@ -104,27 +105,12 @@ class Board extends Component {
   borderGameOver () {
     const snakeHead = this.state.snakePieces[this.state.snakePieces.length - 1]
     if (snakeHead[0] >= 100 || snakeHead[1] >= 100 || snakeHead[0] < 0 || snakeHead[1] < 0) {
-      console.log(this.props.user)
       const playerScore = {
         user: this.props.user,
         score: this.state.currentScore
       }
 
       saveHighScore(playerScore)
-      // .then(res => setUser(res.data.user))
-      // .then(() => msgAlert({
-      //   heading: 'Save Success',
-      //   message: messages.signInSuccess,
-      //   variant: 'success'
-      // }))
-      // .catch(error => {
-      //   this.setState({ email: '', password: '' })
-      //   msgAlert({
-      //     heading: 'Sign In Failed with error: ' + error.message,
-      //     message: messages.signInFailure,
-      //     variant: 'danger'
-      //   })
-      // })
 
       this.setState({
         user: null,
@@ -176,21 +162,6 @@ class Board extends Component {
         this.setState({ gameOver: true })
       }
     })
-    // if (snakeHead[0] === pieces[0] || snakeHead[1] === pieces[1]) {
-    //   this.setState({
-    //     user: null,
-    //     msgAlerts: [],
-    //     snakeSpeed: 200,
-    //     food: randomFoodCoordinates(),
-    //     moveDirection: 'right',
-    //     gameStarted: false,
-    //     snakePieces: [
-    //       [0, 0],
-    //       [2, 0]
-    //     ]
-    //   })
-    //   return ('Game over')
-    // }
   }
 
   growSnake () {

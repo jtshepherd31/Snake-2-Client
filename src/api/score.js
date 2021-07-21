@@ -13,38 +13,13 @@ export const saveHighScore = highScore => {
     url: apiUrl + '/highscores/',
     method: 'POST',
     headers: {
-      'Authorization': `Bearer token=${highScore.user.token}`
+      'Authorization': `Token ${highScore.user.token}`
     },
     data: {
       highscore: {
-        email: highScore.useremail,
+        id: highScore.user.id,
+        email: highScore.user.email,
         score: highScore.score
-      }
-    }
-  })
-}
-
-export const signOut = user => {
-  return axios({
-    url: apiUrl + '/sign-out/',
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Token token=${user.token}`
-    }
-  })
-}
-
-export const changePassword = (passwords, user) => {
-  return axios({
-    url: apiUrl + '/change-password/',
-    method: 'PATCH',
-    headers: {
-      'Authorization': `Token token=${user.token}`
-    },
-    data: {
-      passwords: {
-        old: passwords.oldPassword,
-        new: passwords.newPassword
       }
     }
   })
