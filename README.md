@@ -8,7 +8,7 @@ Server Repo -
 https://github.com/jtshepherd31/Snake-2-api
 
 GitHub Deployed Site -
-None yet
+https://jtshepherd31.github.io/Snake-2-Client/
 Heroku Deployed Site -
 None yet
 
