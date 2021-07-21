@@ -31,6 +31,7 @@
 
 .row {
   justify-content: space-between;
+  margin-top: 10%;
   width: 100%;
 }
 
@@ -56,14 +57,21 @@
   height: 2%;
   background-color: red;
   border: 1px solid black;
-  border-radius: 25px;
+  border-radius: 50px;
 }
+
+.food img {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+}
+
 .container {
   width: 100%;
   max-width: none;
 }
 
-html, body {
+body {
   background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(221,221,221,1) 0%, rgba(2,164,0,1) 67%, rgba(0,88,2,1) 100%) !important;
 }
 
@@ -76,8 +84,61 @@ html, body {
   font-family: 'Press Start 2P', cursive;
 }
 
-hr {
-  
+h3 {
+  font-family: 'Press Start 2P', cursive;
+}
+
+.sign-in-text {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-family: 'Press Start 2P', cursive;
+}
+
+.form-input {
+  margin: 15px 0;
+  height: 45px;
+}
+
+.submit-button {
+  height: 45px;
+  border-radius: 35px;
+  width: 210px;
+  margin: 20px 30%;
+  font-weight: 400;
+  border: 2px solid #fff;
+  background-color: transparent;
+  letter-spacing: 2px;
+}
+
+.submit-button:hover {
+  background-color: darkgreen;
+  border: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.score-header, .start-game-text {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.start-game-text {
+    line-height: 50px;
+    margin: 35% 0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 72px;
+  margin-top: 50%;
 }
 // tree color 99621E
 // grass color c7f9cc

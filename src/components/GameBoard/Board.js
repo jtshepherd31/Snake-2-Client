@@ -26,6 +26,7 @@ class Board extends Component {
       gameStarted: false,
       currentScore: 0,
       highScore: 0,
+      gameOver: null,
       snakePieces: [
         [0, 0],
         [2, 0]
@@ -138,7 +139,7 @@ class Board extends Component {
           [2, 0]
         ]
       })
-      return ('Game over')
+      this.setState({ gameOver: true })
     }
   }
 
@@ -171,7 +172,8 @@ class Board extends Component {
             [2, 0]
           ]
         })
-        return ('Game over')
+
+        this.setState({ gameOver: true })
       }
     })
     // if (snakeHead[0] === pieces[0] || snakeHead[1] === pieces[1]) {
@@ -213,10 +215,27 @@ class Board extends Component {
         <div className="current-score-box">
           <CurrentScore currentScore={this.state.currentScore}/>
         </div>
-        <div className="game-box">
-          <Snake snakePieces={this.state.snakePieces}/>
-          <Food piece={this.state.food}/>
-        </div>
+        {this.state.gameStarted &&
+          <div className="game-box">
+            <Snake snakePieces={this.state.snakePieces}/>
+            <Food piece={this.state.food}/>
+          </div>
+        }
+
+        {!this.state.gameStarted && !this.state.gameOver &&
+          <div className="game-box">
+            <h3 className="start-game-text">Spacebar to Start New Game</h3>
+          </div>
+        }
+
+        {!this.state.gameStarted && !!this.state.gameOver &&
+          <div className="game-box">
+            <h3 className="start-game-text">
+            GAME OVER
+              <br/>
+            Spacebar to Start New Game</h3>
+          </div>
+        }
         <div className="high-score-box">
           <HighScore highScore={this.state.highScore}/>
         </div>

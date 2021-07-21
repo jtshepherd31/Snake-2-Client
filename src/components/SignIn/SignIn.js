@@ -53,23 +53,23 @@ class SignIn extends Component {
 
     return (
       <div className="row">
-        <div className="col-sm-10 col-md-8 mx-auto mt-5">
-          <h3>Sign In</h3>
-          <Form onSubmit={this.onSignIn}>
+        <div className="col-sm-10 col-md-5 mx-auto mt-5">
+          <h3 className="sign-in-text">Sign In</h3>
+          <Form className="form" onSubmit={this.onSignIn}>
             <Form.Group controlId="email">
-              <Form.Label>Email address</Form.Label>
               <Form.Control
+                className="form-input"
                 required
                 type="email"
                 name="email"
                 value={email}
-                placeholder="Enter email"
+                placeholder="Email Address"
                 onChange={this.handleChange}
               />
             </Form.Group>
             <Form.Group controlId="password">
-              <Form.Label>Password</Form.Label>
               <Form.Control
+                className="form-input"
                 required
                 name="password"
                 value={password}
@@ -79,10 +79,11 @@ class SignIn extends Component {
               />
             </Form.Group>
             <Button
+              className="submit-button"
               variant="primary"
               type="submit"
             >
-              Submit
+              SIGN IN
             </Button>
           </Form>
         </div>

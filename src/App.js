@@ -58,7 +58,6 @@ class App extends Component {
           />
         ))}
         <main className="container">
-          <div className="main-title">Snake 2.0</div>
           <AuthenticatedRoute user={user} path='/home' render={() => (
             <Board user={user}/>
           )} />
