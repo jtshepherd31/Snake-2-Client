@@ -35,7 +35,7 @@ As an older user, I want the game page to be easy to navigate so that I can play
 
 ### List of technologies used -
 
--- JavaScript, React, Django, Bootstrap, GitHub
+JavaScript, React, Django, Bootstrap, GitHub
 
 
 ### Future iterations fixes -
@@ -45,12 +45,14 @@ I would like to add barricades within the game borders for an extra challenge fo
 
 ### Planning, process, and problem-solving strategy
 
--- Used personal standups to plan my workday and see what all was achievable within my planned schedule and then a quick overview of my days work to see what was missed or what was completed outside of my schedule for the day. For problem solving, I put issue tickets in if I was stuck and then started to work on something else to be as efficient as possible. For most of my bugs, I was able to resolve them by using the debugger and documentation when I was unsure if I had correct syntax.
+Used personal standups to plan my workday and see what all was achievable within my planned schedule and then a quick overview of my days work to see what was missed or what was completed outside of my schedule for the day. For problem solving, I put issue tickets in if I was stuck and then started to work on something else to be as efficient as possible. For most of my bugs, I was able to resolve them by using the debugger and documentation when I was unsure if I had correct syntax.
 
 
 ### Catalog of routes
 
-METHODS -- GET POST PATCH DELETE PATHS -- highscores
+METHODS -- GET POST PATCH DELETE
+
+PATHS -- highscores
 
 
 ### Wireframe -
