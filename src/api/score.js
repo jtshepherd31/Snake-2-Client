@@ -1,25 +1,65 @@
 import apiUrl from '../apiConfig'
 import axios from 'axios'
 
-export const getHighScores = userId => {
+export const getPlayerHighScore = user => {
   return axios({
     method: 'GET',
-    url: apiUrl + '/highscores/' + userId
+    headers: {
+      'Authorization': `Token ${user.token}`
+    },
+    data: {
+      user: {
+        id: user.id
+      }
+    },
+    url: apiUrl + '/highscores/'
   })
 }
 
-export const saveHighScore = highScore => {
+export const saveHighScore = user => {
   return axios({
     url: apiUrl + '/highscores/',
     method: 'POST',
     headers: {
-      'Authorization': `Token ${highScore.user.token}`
+      'Authorization': `Token ${user.token}`
     },
     data: {
       highscore: {
-        id: highScore.user.id,
-        email: highScore.user.email,
-        score: highScore.score
+        owner: user.id,
+        email: user.email,
+        score: user.score
+      }
+    }
+  })
+}
+
+export const updateHighScore = (data) => {
+  return axios({
+    url: apiUrl + '/highscores/' + data.id,
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Token ${data.user.token}`
+    },
+    data: {
+      highscore: {
+        owner: data.user.id,
+        email: data.user.email,
+        score: data.score
+      }
+    }
+  })
+}
+
+export const deleteHighScore = data => {
+  return axios({
+    url: apiUrl + '/highscores/' + data.id,
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Token ${data.user.token}`
+    },
+    data: {
+      highscore: {
+        owner: data.user.id
       }
     }
   })

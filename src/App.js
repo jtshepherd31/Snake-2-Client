@@ -17,7 +17,10 @@ class App extends Component {
     super(props)
     this.state = {
       user: null,
-      msgAlerts: []
+      msgAlerts: [],
+      originalHighscore: {
+        score: 0
+      }
     }
   }
 
@@ -42,8 +45,16 @@ class App extends Component {
     })
   }
 
+  resetScore = () => {
+    this.setState({
+      originalHighscore: {
+        score: 0
+      }
+    })
+  }
+
   render () {
-    const { msgAlerts, user } = this.state
+    const { msgAlerts, user, originalHighscore } = this.state
     return (
       <Fragment>
         <Header user={user} />
@@ -59,16 +70,16 @@ class App extends Component {
         ))}
         <main className="container">
           <AuthenticatedRoute user={user} path='/home' render={() => (
-            <Board user={user} msgAlert={this.msgAlert} setUser={this.setUser}/>
+            <Board user={user} msgAlert={this.msgAlert} setUser={this.setUser} originalHighscore={originalHighscore} />
           )} />
           <Route path='/sign-up' render={() => (
-            <SignUp msgAlert={this.msgAlert} setUser={this.setUser} />
+            <SignUp msgAlert={this.msgAlert} setUser={this.setUser} user={user}/>
           )} />
           <Route path='/sign-in' render={() => (
-            <SignIn msgAlert={this.msgAlert} setUser={this.setUser} />
+            <SignIn msgAlert={this.msgAlert} setUser={this.setUser} getPlayerHighScore={this.getPlayerHighScore} />
           )} />
           <AuthenticatedRoute user={user} path='/sign-out' render={() => (
-            <SignOut msgAlert={this.msgAlert} clearUser={this.clearUser} user={user} />
+            <SignOut msgAlert={this.msgAlert} clearUser={this.clearUser} user={user} resetScore={this.resetScore} />
           )} />
           <AuthenticatedRoute user={user} path='/change-pw' render={() => (
             <ChangePassword msgAlert={this.msgAlert} user={user} />

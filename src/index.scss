@@ -119,6 +119,27 @@ h3 {
   border: none;
 }
 
+.reset-button {
+  height: 45px;
+  border-radius: 35px;
+  width: 180px;
+  font-weight: 400;
+  border: 2px solid darkgreen;
+  background-color: transparent;
+  letter-spacing: 2px;
+  align-self: center;
+  color: darkgreen;
+  font-size: 10px;
+  margin: 80px 15% 0;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.reset-button:hover {
+  background-color: darkgreen;
+  border: none;
+  color: white;
+}
+
 .form {
   display: flex;
   flex-direction: column;

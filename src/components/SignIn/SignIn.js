@@ -19,7 +19,6 @@ class SignIn extends Component {
 
   handleChange = event => {
     event.preventDefault()
-    console.log('here')
     this.setState({
       [event.target.name]: event.target.value
     })
@@ -31,7 +30,9 @@ class SignIn extends Component {
     const { msgAlert, history, setUser } = this.props
 
     signIn(this.state)
-      .then(res => setUser(res.data.user))
+      .then(res => {
+        setUser(res.data.user)
+      })
       .then(() => msgAlert({
         heading: 'Sign In Success',
         message: messages.signInSuccess,

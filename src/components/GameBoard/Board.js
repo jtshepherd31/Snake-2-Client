@@ -5,7 +5,8 @@ import CurrentScore from './../../components/Scores/CurrentScore'
 import HighScore from './../../components/Scores/HighScore'
 import Snake from './Snake'
 import Food from './Food'
-import { saveHighScore } from '../../api/score'
+import { updateHighScore, getPlayerHighScore, deleteHighScore, saveHighScore } from '../../api/score'
+
 // import messages from '../AutoDismissAlert/messages'
 
 const randomFoodCoordinates = () => {
@@ -21,12 +22,15 @@ class Board extends Component {
     super(props)
 
     this.state = {
+      loaded: false,
       snakeSpeed: 200,
       food: randomFoodCoordinates(),
       moveDirection: 'right',
       gameStarted: false,
       currentScore: 0,
-      highScore: 0,
+      highScore: {
+        score: 0
+      },
       gameOver: null,
       snakePieces: [
         [0, 0],
@@ -39,18 +43,72 @@ class Board extends Component {
         40: { direction: 'down', opposite: 'up' }
       }
     }
+
+    this.handleClick = this.handleClick.bind(this)
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     // give a speed to snake
     // document.onKeyDown = (e) => this.onKeyDown(e)
+    this.getPlayerHighScore()
     window.addEventListener('keydown', (e) => {
       this.onKeyDown(e)
     })
     setInterval(this.snakeMovement, this.state.snakeSpeed)
   }
 
-  componentDidUpdate () {
+  getPlayerHighScore = async () => {
+    const { user, msgAlert } = this.props
+
+    getPlayerHighScore(user)
+      .then(response => {
+        if (response.data.highscores.length) {
+          this.setState({
+            highScore: response.data.highscores[0]
+          })
+
+          msgAlert({
+            heading: 'High Score Get Success',
+            message: 'Your high score has been retrieved',
+            variant: 'success'
+          })
+        } else {
+          this.createPlayerHighScore()
+        }
+      })
+      .catch(error => msgAlert({
+        heading: 'Get High Score Failed with error: ' + error.message,
+        message: 'Failed to retrieve high score',
+        variant: 'danger'
+      }))
+
+    // const response = await getPlayerHighScore(user)
+  }
+
+  createPlayerHighScore (scoreReset) {
+    const { user, msgAlert } = this.props
+
+    saveHighScore({ ...user, score: 0 })
+      .then(response => this.setState({
+        highScore: response.data.highscore
+      }))
+      .then(() => {
+        if (!scoreReset) {
+          msgAlert({
+            heading: 'High Score Created Success',
+            message: 'A high score has been created for your user',
+            variant: 'success'
+          })
+        }
+      })
+      .catch(error => msgAlert({
+        heading: 'Create High Score Failed with error: ' + error.message,
+        message: 'Failed to create high score',
+        variant: 'danger'
+      }))
+  }
+
+  componentDidUpdate (prevProps, nextProps) {
     this.borderGameOver()
     this.checkForFood()
     this.tangleGameOver()
@@ -59,19 +117,21 @@ class Board extends Component {
   // add key stroke designations to recognise arrow keys as movement directions
   onKeyDown = (e) => {
     // switch allows us to select a code block to be used based on key down event function
-    const isDirectionKey = Object.keys(this.state.keyCodes).includes(e.keyCode.toString())
-    const { moveDirection } = this.state
+    if (e.keyCode) {
+      const isDirectionKey = Object.keys(this.state.keyCodes).includes(e.keyCode.toString())
+      const { moveDirection } = this.state
 
-    if (isDirectionKey && moveDirection !== this.state.keyCodes[e.keyCode].opposite) {
-      e.preventDefault()
-      this.setState({ moveDirection: this.state.keyCodes[e.keyCode].direction })
-    }
+      if (isDirectionKey && moveDirection !== this.state.keyCodes[e.keyCode].opposite) {
+        e.preventDefault()
+        this.setState({ moveDirection: this.state.keyCodes[e.keyCode].direction })
+      }
 
-    if (e.keyCode === 32 && !this.state.gameStarted) {
-      e.preventDefault()
-      this.setState({
-        gameStarted: true
-      })
+      if (e.keyCode === 32 && !this.state.gameStarted) {
+        e.preventDefault()
+        this.setState({
+          gameStarted: true
+        })
+      }
     }
   }
 
@@ -103,14 +163,28 @@ class Board extends Component {
   }
 
   borderGameOver () {
+    const { msgAlert } = this.props
     const snakeHead = this.state.snakePieces[this.state.snakePieces.length - 1]
     if (snakeHead[0] >= 100 || snakeHead[1] >= 100 || snakeHead[0] < 0 || snakeHead[1] < 0) {
-      const playerScore = {
-        user: this.props.user,
-        score: this.state.currentScore
-      }
+      if (this.state.currentScore + 1 > this.state.highScore.score) {
+        const playerScore = {
+          id: this.state.highScore.id,
+          user: this.props.user,
+          score: this.state.currentScore
+        }
 
-      saveHighScore(playerScore)
+        updateHighScore(playerScore)
+          .then(() => msgAlert({
+            heading: 'Saved High Score Success: ',
+            message: 'New high score has been updated',
+            variant: 'success'
+          }))
+          .catch(error => msgAlert({
+            heading: 'Save High Score  Failed with error: ' + error.message,
+            message: 'Failed to update high score',
+            variant: 'danger'
+          }))
+      }
 
       this.setState({
         user: null,
@@ -139,6 +213,7 @@ class Board extends Component {
   }
 
   tangleGameOver () {
+    const { msgAlert } = this.props
     const pieces = [...this.state.snakePieces]
     const snakeHead = this.state.snakePieces[this.state.snakePieces.length - 1]
 
@@ -160,6 +235,26 @@ class Board extends Component {
         })
 
         this.setState({ gameOver: true })
+
+        if (this.state.currentScore + 1 > this.state.highScore.score) {
+          const playerScore = {
+            id: this.state.highScore.id,
+            user: this.props.user,
+            score: this.state.currentScore
+          }
+
+          updateHighScore(playerScore)
+            .then(() => msgAlert({
+              heading: 'Saved High Score Success: ',
+              message: 'New high score has been updated',
+              variant: 'success'
+            }))
+            .catch(error => msgAlert({
+              heading: 'Save High Score  Failed with error: ' + error.message,
+              message: 'Failed to update high score',
+              variant: 'danger'
+            }))
+        }
       }
     })
   }
@@ -178,6 +273,40 @@ class Board extends Component {
     this.setState({
       currentScore: this.state.currentScore + 1
     })
+
+    if (this.state.currentScore + 1 > this.state.highScore.score) {
+      this.setState({
+        highScore: {
+          ...this.state.highScore,
+          score: this.state.currentScore + 1
+        }
+      })
+    }
+  }
+
+  handleClick () {
+    const { msgAlert, user } = this.props
+
+    deleteHighScore({ ...this.state.highScore, user: user })
+      .then(() => this.setState({
+        highScore: {
+          ...this.state.highScore,
+          score: 0
+        }
+      }))
+      .then(() => msgAlert({
+        heading: 'High Score Reset Success',
+        message: 'Your high score has been reset',
+        variant: 'success'
+      }))
+      .then(() => {
+        this.createPlayerHighScore(true)
+      })
+      .catch(error => msgAlert({
+        heading: 'Reset Score Failed with error: ' + error.message,
+        message: 'Failed to reset high score',
+        variant: 'danger'
+      }))
   }
 
   render () {
@@ -208,7 +337,11 @@ class Board extends Component {
           </div>
         }
         <div className="high-score-box">
-          <HighScore highScore={this.state.highScore}/>
+          <HighScore highScore={this.state.highScore.score} user={this.props.user}/>
+          <button className="reset-button"
+            onClick={this.handleClick}>
+            Reset Score
+          </button>
         </div>
       </section>
     )

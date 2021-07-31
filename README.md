@@ -52,7 +52,7 @@ Used personal standups to plan my workday and see what all was achievable within
 
 METHODS -- GET POST PATCH DELETE
 
-PATHS -- highscores
+PATHS -- highscores, sign-in, sign-up, change-pw
 
 
 ### Wireframe -
